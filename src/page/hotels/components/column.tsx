@@ -1,6 +1,6 @@
 import ConfirmDialog from "@/components/confirm-dialog";
 import { useRemoveDeli } from "@/store/server/delivery-man/mutation";
-import { Content } from "@/store/server/ways/typed";
+import { Content } from "@/store/server/places/typed";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -9,43 +9,25 @@ import { Link } from "react-router";
 export const columns: ColumnDef<Content>[] = [
   {
     accessorKey: "id",
-    header: () => <p className=" w-[200px] ">Order ID</p>,
+    header: () => <p className=" w-[200px] ">ID</p>,
   },
   {
-    accessorKey: "senderName",
-    header: () => <p className=" w-[140px] ">Sender Name</p>,
+    accessorKey: "name",
+    header: () => <p className=" w-[140px] ">Name</p>,
     cell: ({ row }) => {
       console.log(row);
 
-      return <p className=" w-[140px] ">{row.getValue("senderName") || "-"}</p>;
+      return <p className=" w-[140px] ">{row.getValue("name") || "-"}</p>;
     },
   },
   {
-    accessorKey: "orderCreatedDate",
-    header: () => <p className="  w-[140px] ">Order Created Date</p>,
+    accessorKey: "description",
+    header: () => <p className="  w-[140px] ">Description</p>,
     cell: ({ row }) => {
       return (
         <p className=" w-[140px]">
-          {dayjs(row.getValue("orderCreatedDate")).format("YYYY-MM-DD")}
+          { row.getValue("description") }
         </p>
-      );
-    },
-  },
-  {
-    accessorKey: "deliveryName",
-    header: () => <p className="  w-[140px] ">Delivery Men Name</p>,
-    cell: ({ row }) => {
-      return (
-        <p className=" w-[140px] ">{row.getValue("deliveryName") || "-"}</p>
-      );
-    },
-  },
-  {
-    accessorKey: "orderStatus",
-    header: () => <p className="  w-[140px] ">Delivery Status</p>,
-    cell: ({ row }) => {
-      return (
-        <p className=" w-[140px] ">{row.getValue("orderStatus") || "-"}</p>
       );
     },
   },
@@ -64,17 +46,10 @@ export const columns: ColumnDef<Content>[] = [
       };
 
       return (
-        <div className=" !w-[100px]  justify-end flex items-center gap-1">
-          <span
-            onClick={() => setOpen(true)}
-            className=" cursor-pointer pr-3 text-dms-50"
-          >
-            Remove
-          </span>
-          <div className="  h-2 border-r border-dms-50 "></div>
+        <div className=" !w-[100px]  justify-start flex items-center gap-1">
           <Link
             className=" pl-3 text-dms-50"
-            to={`/merchants/edit-merchant/${id}`}
+            to={`/hotels/edit/${id}`}
           >
             Edit
           </Link>

@@ -8,9 +8,9 @@ import Paginations from "@/components/pagination";
 import { useState } from "react";
 import UseDebounce from "@/hook/use-debounce";
 import { columns } from "./components/column";
-import { useWays } from "@/store/server/ways/query";
+import {useGetHotels} from "@/store/server/hotels/query.tsx";
 
-const Ways = () => {
+const Hotels = () => {
   const navigate = useNavigate();
 
   // react hook
@@ -20,7 +20,7 @@ const Ways = () => {
   // custom hook
   const { debounce } = UseDebounce(search);
 
-  const { data } = useWays({
+  const { data } = useGetHotels({
     page: page - 1,
     size: 9,
     query: debounce,
@@ -29,15 +29,15 @@ const Ways = () => {
   return (
     <div className=" px-5 pt-5">
       <div className=" flex items-center justify-between">
-        <p className=" text-lg font-[500]">Delivery Men List</p>
+        <p className=" text-lg font-[500]">Hotel List</p>
 
         <div className=" flex items-center gap-4">
           <Button
             className="  font-[400] cursor-pointer bg-dms-50 hover:bg-dms-50"
             size={"lg"}
-            onClick={() => navigate("/ways/add")}
+            onClick={() => navigate("/hotels/add")}
           >
-            <IconPlus /> Create Order
+            <IconPlus /> Create Hotel
           </Button>
         </div>
       </div>
@@ -59,12 +59,12 @@ const Ways = () => {
 
         {/* data table */}
         <div className=" h-[66vh] mt-4">
-          <DataTable data={data?.data.content || []} columns={columns} />
+          <DataTable data={data?.content || []} columns={columns} />
         </div>
         <div className=" flex justify-end">
           <Paginations
             page={page}
-            total={data?.data.page.totalPages || 0}
+            total={data?.page.totalPages || 0}
             handlePage={(p) => setPage(p)}
           />
         </div>
@@ -73,4 +73,4 @@ const Ways = () => {
   );
 };
 
-export default Ways;
+export default Hotels;

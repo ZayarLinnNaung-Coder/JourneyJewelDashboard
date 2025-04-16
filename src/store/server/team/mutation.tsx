@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { axios } from "../../../common/util/axiox";
-import { authJsonToken } from "../../../common/util/util";
+import { axios } from "@/common/util/axiox.ts";
+import { authJsonToken } from "@/common/util/util.ts";
 import { addTeamProps } from "./typed";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";

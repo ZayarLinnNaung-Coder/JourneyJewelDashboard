@@ -12,40 +12,42 @@ export const slideNav = [
         id: 1.1,
         name: "Team",
         link: "/team",
-      },
-      {
-        id: 1.2,
-        name: "Merchants",
-        link: "/merchants",
-      },
-      {
-        id: 1.3,
-        name: "Delivery Men",
-        link: "/delivery-men",
-      },
+      }
     ],
   },
   {
     id: 2,
-    group: "Manage Ways",
+    group: "Manage Places",
     icon: <IconManageWay />,
     children: [
       {
         id: 2.1,
-        name: "Ways",
-        link: "/ways",
+        name: "Places",
+        link: "/places",
       },
     ],
   },
   {
     id: 3,
-    group: "Manage Services",
+    group: "Manage Transportations",
     icon: <IconService />,
     children: [
       {
         id: 3.1,
-        name: "Zone",
-        link: "/zone",
+        name: "Transportation",
+        link: "/transportations",
+      },
+    ],
+  },
+  {
+    id: 4,
+    group: "Manage Business",
+    icon: <IconService />,
+    children: [
+      {
+        id: 3.1,
+        name: "Hotels",
+        link: "/hotels",
       },
     ],
   },
