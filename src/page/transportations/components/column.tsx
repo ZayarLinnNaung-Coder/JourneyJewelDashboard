@@ -26,7 +26,9 @@ export const columns: ColumnDef<Content>[] = [
     cell: ({ row }) => {
       return (
         <p className=" w-[140px]">
-          { row.getValue("description") }
+          {String(row.getValue("description")).length > 20
+              ? String(row.getValue("description")).substring(0, 20) + "..."
+              : row.getValue("description")}
         </p>
       );
     },

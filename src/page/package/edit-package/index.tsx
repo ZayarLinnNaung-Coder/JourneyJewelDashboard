@@ -47,7 +47,7 @@ const formSchema = z.object({
     ),
 });
 
-const EditHotel = () => {
+const EditPackage = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -104,7 +104,7 @@ const EditHotel = () => {
                 <p className=" text-lg font-[500]">
                     Edit Hotels
                     <span className=" pl-2 text-sm text-black/50 font-normal">
-            (Place to edit hotels)
+            (Place to edit transportation)
           </span>
                 </p>
             </div>
@@ -341,4 +341,4 @@ const EditHotel = () => {
 );
 };
 
-export default EditHotel;
+export default EditPackage;

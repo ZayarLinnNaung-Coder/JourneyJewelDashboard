@@ -47,7 +47,7 @@ const Login = () => {
           <div className="">
             <div className=" flex items-center justify-center gap-3">
               <img src={logo} alt="logo" className=" w-[45px] h-[45px]" />
-              <h2 className=" text-dms-50 text-2xl">LM Delivery</h2>
+              <h2 className=" text-dms-50 text-2xl">Journey Jewel</h2>
             </div>
             <p className=" mt-3 text-black/50 text-sm text-center ">
               A Place Where You Can Manage All Ways

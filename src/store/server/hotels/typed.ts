@@ -44,6 +44,8 @@ export interface HotelDetailsProps {
   name: string
   description: string
   placeId: string
+  phoneNumber: string
+  imageUrl: string
   roomTypes: RoomType[]
   mealPlans: MealPlan[]
 }

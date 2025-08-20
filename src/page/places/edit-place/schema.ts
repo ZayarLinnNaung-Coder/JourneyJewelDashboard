@@ -5,5 +5,6 @@ export const formSchemaSchema = z.object({
   place: z.string(),
   minBudget: z.string(),
   description: z.string(),
-  imageUrl: z.string()
+  imageUrl: z.string(),
+  placeType: z.string()
 });

@@ -23,7 +23,11 @@ export const columns: ColumnDef<Content>[] = [
     accessorKey: "description",
     header: () => <p className=" w-[140px] ">Description</p>,
     cell: ({ row }) => {
-      return <p className=" w-[140px] ">{row.getValue("description") || "-"}</p>;
+      return <p className=" w-[140px] ">
+        {String(row.getValue("description")).length > 20
+            ? String(row.getValue("description")).substring(0, 20) + "..."
+            : row.getValue("description")}
+      </p>;
     },
   },
   {

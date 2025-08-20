@@ -6,6 +6,7 @@ import { deliveryMenRouter } from "./router/delivery-men";
 import { manageServiceRouter } from "./router/manage-service";
 import {transportationRouter} from "@/router/transportations.route.ts";
 import {hotelRouter} from "@/router/hotels.route.ts";
+import {packageRouter} from "@/router/package.route.ts";
 const Router = () => {
   const router = createBrowserRouter([
     {
@@ -24,7 +25,8 @@ const Router = () => {
         ...deliveryMenRouter,
         ...manageServiceRouter,
         ...transportationRouter,
-          ...hotelRouter
+          ...hotelRouter,
+          ...packageRouter
       ],
     },
     {

@@ -12,6 +12,11 @@ export const slideNav = [
         id: 1.1,
         name: "Team",
         link: "/team",
+      },
+      {
+        id: 1.2,
+        name: "Merchants",
+        link: "/merchants",
       }
     ],
   },
@@ -48,6 +53,11 @@ export const slideNav = [
         id: 3.1,
         name: "Hotels",
         link: "/hotels",
+      },
+      {
+        id: 3.2,
+        name: "Packages",
+        link: "/packages",
       },
     ],
   },

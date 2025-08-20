@@ -34,38 +34,15 @@ export const columns: ColumnDef<Content>[] = [
     },
   },
   {
-    accessorKey: "id",
-    header: () => <p className=" w-[100px] ">Action</p>,
+    accessorKey: "price",
+    header: () => <p className="  w-[140px] ">Price</p>,
     cell: ({ row }) => {
-      const [open, setOpen] = useState(false);
-      const remove = useRemoveDeli();
-      const id = row.getValue("id") as string;
-
-      const handleDeleteDelivery = () => {
-        remove.mutate(id, {
-          onSuccess: () => setOpen(false),
-        });
-      };
-
       return (
-        <div className=" !w-[100px]  justify-start flex items-center gap-1">
-          <Link
-            className=" pl-3 text-dms-50"
-            to={`/hotels/edit/${id}`}
-          >
-            Edit
-          </Link>
-          <ConfirmDialog
-            onComfirm={handleDeleteDelivery}
-            type="delete"
-            open={open}
-            setOpen={setOpen}
-            isPending={remove.isPending}
-          >
-            Are you sure to remove this delivery man?
-          </ConfirmDialog>{" "}
-        </div>
+          <p className=" w-[140px]">
+            { row.getValue("price") }
+          </p>
       );
     },
   },
+
 ];

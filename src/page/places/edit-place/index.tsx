@@ -1,5 +1,4 @@
 import IconLeft from "@/common/icon/IconLeft";
-import IconLoder from "@/common/icon/IconLoder";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -21,6 +20,7 @@ import {useGetPlaceById} from "@/store/server/places/query.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {axios} from "@/common/util/axiox.ts";
 import {authJsonToken} from "@/common/util/util.ts";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
 
 const EditTeam = () => {
     const param = useParams();
@@ -30,7 +30,8 @@ const EditTeam = () => {
             place: '',
             minBudget: '0',
             description: '',
-            imageUrl: ''
+            imageUrl: '',
+            placeType: ''
         },
         resolver: zodResolver(formSchemaSchema),
     });
@@ -38,34 +39,16 @@ const EditTeam = () => {
     // query
     const { data: placeById } = useGetPlaceById(param?.id?.toString() || "");
 
-    const fileInputRef = useRef(null);
-    const [imagePreview, setImagePreview] = useState("https://static.vecteezy.com/system/resources/previews/022/059/000/non_2x/no-image-available-icon-vector.jpg");
-
-    const handleImageClick = () => {
-        fileInputRef.current.click(); // Trigger the hidden file input
-    };
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-
-            const fetchImage = async () => {
-                const { data } = await axios.post(
-                    `files/upload`,
-                    { file: file },
-                    {
-                        headers: authJsonToken(true),
-                    }
-                );
-
-                setImagePreview(data.data.url);
-
-                return data;
-            };
-
-            fetchImage();
-        }
-    };
+    const PLACE_TYPES = [
+        { value: "BEACH", label: "Beach" },
+        { value: "PAGODA", label: "Pagoda" },
+        { value: "MOUNTAIN", label: "Mountain" },
+        { value: "FOREST", label: "Forest" },
+        { value: "LAKE", label: "Lake" },
+        { value: "CITY", label: "City" },
+        { value: "DESERT", label: "Desert" },
+        { value: "VALLEY", label: "Valley" },
+    ];
 
     // mutation
     const updatePlace = useUpdateWay(param?.id?.toString() || "");
@@ -76,8 +59,8 @@ const EditTeam = () => {
             form.setValue("place", placeById?.place);
             form.setValue("minBudget", placeById.minBudget.toString()   );
             form.setValue("description", placeById?.description);
-
-            setImagePreview(placeById?.imageUrl);
+            form.setValue("imageUrl", placeById?.imageUrl);
+            form.setValue("placeType", placeById?.placeType);
         }
     }, [placeById]);
 
@@ -87,7 +70,7 @@ const EditTeam = () => {
                 <Link to={"/places"}>
                     <IconLeft />
                 </Link>
-                <p className=" text-lg font-[500]">Edit Member</p>
+                <p className=" text-lg font-[500]">Edit Place</p>
             </div>
             <div className="  flex items-center justify-center bg-white py-8 w-full mt-4 ">
                 <Form {...form}>
@@ -98,7 +81,8 @@ const EditTeam = () => {
                                 place: val.place,
                                 minBudget: val.minBudget,
                                 description: val.description,
-                                imageUrl: imagePreview
+                                imageUrl: val.imageUrl,
+                                placeType: val.placeType // Include this in the mutation
                             })
                         )}
                         className=" space-y-8"
@@ -109,15 +93,21 @@ const EditTeam = () => {
                             </div>
 
                             <div className="px-5 py-8 grid grid-cols-3 gap-4 items-center">
-                                <img
-                                    src={imagePreview}
-                                    alt="Preview"
-                                    width="100"
-                                    height="100"
-                                    className="object-cover rounded"
-                                    onClick={handleImageClick}
+                                <FormField
+                                    control={form.control}
+                                    name="imageUrl"
+                                    render={({field}) => (
+                                        <FormItem>
+                                            <FormLabel className=" font-[400] gap-1 items-center flex">
+                                                <span className="text-red-500">*</span>Image Url
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input {...field} placeholder="enter image url"/>
+                                            </FormControl>
+                                            <FormMessage/>
+                                        </FormItem>
+                                    )}
                                 />
-                                <input className="hidden" type="file" ref={fileInputRef} accept="image/*" onChange={handleImageChange}/>
                             </div>
 
                             <div className=" px-5 py-8 grid grid-cols-3 gap-4">
@@ -130,7 +120,7 @@ const EditTeam = () => {
                                                 <span className="text-red-500">*</span>Name
                                             </FormLabel>
                                             <FormControl>
-                                                <Input {...field} placeholder="enter sender name"/>
+                                                <Input {...field} placeholder="enter name"/>
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -162,6 +152,32 @@ const EditTeam = () => {
                                             <FormControl>
                                                 <Input {...field} type="number" placeholder="enter min budget"/>
                                             </FormControl>
+                                            <FormMessage/>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="placeType"
+                                    render={({field}) => (
+                                        <FormItem>
+                                            <FormLabel className=" font-[400] gap-1 items-center flex">
+                                                <span className="text-red-500">*</span>Place Type
+                                            </FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select place type" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {PLACE_TYPES.map((type) => (
+                                                        <SelectItem key={type.value} value={type.value}>
+                                                            {type.label}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
                                             <FormMessage/>
                                         </FormItem>
                                     )}

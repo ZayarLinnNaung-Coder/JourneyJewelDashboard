@@ -23,6 +23,8 @@ const formSchema = z.object({
     name: z.string(),
     description: z.string(),
     placeId: z.string(),
+    imageUrl: z.string(),
+    phoneNumber: z.string(),
     roomTypes: z.array(
         z.object({
             roomTypeName: z.string(),
@@ -44,6 +46,8 @@ const AddHotel = () => {
             name: "",
             description: "",
             placeId: "",
+            phoneNumber: "",
+            imageUrl: "",
             roomTypes: [
                 {
                     roomTypeName: "",
@@ -79,7 +83,7 @@ const AddHotel = () => {
     return (
         <div className=" px-5 pt-5">
             <div className=" flex items-center gap-3">
-                <Link to={"/transportations"}>
+                <Link to={"/hotels"}>
                     <IconLeft />
                 </Link>
                 <p className=" text-lg font-[500]">
@@ -131,143 +135,179 @@ const AddHotel = () => {
                             />
                         </div>
 
-                        <FormField
-                            control={form.control}
-                            name={`placeId`}
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        <span className=" text-red-500">*</span> Place
-                                    </FormLabel>
-                                    <Select
-                                        value={field.value}
-                                        onValueChange={field.onChange}
-                                    >
+                        <div className="gap-4 grid grid-cols-3 items-end">
+
+                            <FormField
+                                control={form.control}
+                                name="phoneNumber"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel className=" text-sm flex items-center">
+                                            <span className=" text-red-500">*</span>
+                                            <p>Phone Number</p>
+                                        </FormLabel>
                                         <FormControl>
-                                            <SelectTrigger className=" w-full">
-                                                <SelectValue
-                                                    className=" w-full col-span-1"
-                                                    placeholder="Select Place"
-                                                />
-                                            </SelectTrigger>
+                                            <Input {...field} placeholder="enter phone number"/>
                                         </FormControl>
-                                        <SelectContent>
-                                            {place?.content.map((place) => (
-                                                <SelectItem value={place.id}>
-                                                    {place.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </FormItem>
-                            )}
-                        />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <div className="grid md:grid-cols-2 gap-4">
-                            <div className="card p-5 bg-[#fafafa] rounded-md">
-                                <p className="mb-5">Room Types</p>
-                                <div className="gap-4 grid grid-cols-2 items-end">
-                                    {roomTypeFields.map((_, idx) => (
-                                        <React.Fragment key={idx}>
-                                            <FormField
-                                                name={`roomTypes.${idx}.roomTypeName`}
-                                                control={form.control}
-                                                render={({field}) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-sm flex items-center">
-                                                            <span className="text-red-500">*</span>
-                                                            <p>Room Name</p>
-                                                        </FormLabel>
-                                                        <FormControl>
-                                                            <Input {...field} placeholder="enter room name"/>
-                                                        </FormControl>
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                name={`roomTypes.${idx}.price`}
-                                                control={form.control}
-                                                render={({field}) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-sm flex items-center">
-                                                            <span className="text-red-500">*</span>
-                                                            <p>Price</p>
-                                                        </FormLabel>
-                                                        <FormControl>
-                                                            <Input {...field} placeholder="enter price"/>
-                                                        </FormControl>
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </React.Fragment>
-                                    ))}
-                                </div>
+                            <FormField
+                                control={form.control}
+                                name="imageUrl"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel className=" text-sm flex items-center">
+                                            <span className=" text-red-500">*</span>
+                                            <p>Image Url</p>
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder="enter image url"/>
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
 
-                                <button
-                                    type="button"
-                                    onClick={() => appendRoomType({roomTypeName: "", price: ""})}
-                                    className="mt-7 disabled:opacity-50 disabled:cursor-not-allowed w-full cursor-pointer"
-                                >
-                                    <div
-                                        className="border gap-3 border-dashed border-dms-50 py-2 flex flex-col items-center justify-center">
-                                        <IconPlus className="text-dms-50"/>
-                                        <p className="text-sm text-dms-50">Add another Room Type</p>
-                                    </div>
-                                </button>
-                            </div>
+                            <FormField
+                                control={form.control}
+                                name={`placeId`}
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            <span className=" text-red-500">*</span> Place
+                                        </FormLabel>
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={field.onChange}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className=" w-full">
+                                                    <SelectValue
+                                                        className=" w-full col-span-1"
+                                                        placeholder="Select Place"
+                                                    />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {place?.content.map((place) => (
+                                                    <SelectItem value={place.id}>
+                                                        {place.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormItem>
+                                )}
+                            />
 
-                            <div className="card p-5 bg-[#fafafa] rounded-md">
-                                <p className="mb-5">Meal Plans</p>
-                                <div className="gap-4 grid grid-cols-2 items-end">
-                                    {mealPlanFields.map((_, idx) => (
-                                        <React.Fragment key={idx}>
-                                            <FormField
-                                                name={`mealPlans.${idx}.mealPlanName`}
-                                                control={form.control}
-                                                render={({field}) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-sm flex items-center">
-                                                            <span className="text-red-500">*</span>
-                                                            <p>Meal Plan Name</p>
-                                                        </FormLabel>
-                                                        <FormControl>
-                                                            <Input {...field} placeholder="enter meal plan name"/>
-                                                        </FormControl>
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                name={`mealPlans.${idx}.price`}
-                                                control={form.control}
-                                                render={({field}) => (
-                                                    <FormItem>
-                                                        <FormLabel className="text-sm flex items-center">
-                                                            <span className="text-red-500">*</span>
-                                                            <p>Price</p>
-                                                        </FormLabel>
-                                                        <FormControl>
-                                                            <Input {...field} placeholder="enter price"/>
-                                                        </FormControl>
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </React.Fragment>
-                                    ))}
-                                </div>
-
-                                <button
-                                    type="button"
-                                    onClick={() => appendMealPlan({mealPlanName: "", price: ""})}
-                                    className="mt-7 disabled:opacity-50 disabled:cursor-not-allowed w-full cursor-pointer"
-                                >
-                                    <div
-                                        className="border gap-3 border-dashed border-dms-50 py-2 flex flex-col items-center justify-center">
-                                        <IconPlus className="text-dms-50"/>
-                                        <p className="text-sm text-dms-50">Add another Meal Plan</p>
-                                    </div>
-                                </button>
-                            </div>
                         </div>
+
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <div className="card p-5 bg-[#fafafa] rounded-md">
+                                    <p className="mb-5">Room Types</p>
+                                    <div className="gap-4 grid grid-cols-2 items-end">
+                                        {roomTypeFields.map((_, idx) => (
+                                            <React.Fragment key={idx}>
+                                                <FormField
+                                                    name={`roomTypes.${idx}.roomTypeName`}
+                                                    control={form.control}
+                                                    render={({field}) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-sm flex items-center">
+                                                                <span className="text-red-500">*</span>
+                                                                <p>Room Name</p>
+                                                            </FormLabel>
+                                                            <FormControl>
+                                                                <Input {...field} placeholder="enter room name"/>
+                                                            </FormControl>
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    name={`roomTypes.${idx}.price`}
+                                                    control={form.control}
+                                                    render={({field}) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-sm flex items-center">
+                                                                <span className="text-red-500">*</span>
+                                                                <p>Price</p>
+                                                            </FormLabel>
+                                                            <FormControl>
+                                                                <Input {...field} placeholder="enter price"/>
+                                                            </FormControl>
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </React.Fragment>
+                                        ))}
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => appendRoomType({roomTypeName: "", price: ""})}
+                                        className="mt-7 disabled:opacity-50 disabled:cursor-not-allowed w-full cursor-pointer"
+                                    >
+                                        <div
+                                            className="border gap-3 border-dashed border-dms-50 py-2 flex flex-col items-center justify-center">
+                                            <IconPlus className="text-dms-50"/>
+                                            <p className="text-sm text-dms-50">Add another Room Type</p>
+                                        </div>
+                                    </button>
+                                </div>
+
+                                <div className="card p-5 bg-[#fafafa] rounded-md">
+                                    <p className="mb-5">Meal Plans</p>
+                                    <div className="gap-4 grid grid-cols-2 items-end">
+                                        {mealPlanFields.map((_, idx) => (
+                                            <React.Fragment key={idx}>
+                                                <FormField
+                                                    name={`mealPlans.${idx}.mealPlanName`}
+                                                    control={form.control}
+                                                    render={({field}) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-sm flex items-center">
+                                                                <span className="text-red-500">*</span>
+                                                                <p>Meal Plan Name</p>
+                                                            </FormLabel>
+                                                            <FormControl>
+                                                                <Input {...field} placeholder="enter meal plan name"/>
+                                                            </FormControl>
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    name={`mealPlans.${idx}.price`}
+                                                    control={form.control}
+                                                    render={({field}) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-sm flex items-center">
+                                                                <span className="text-red-500">*</span>
+                                                                <p>Price</p>
+                                                            </FormLabel>
+                                                            <FormControl>
+                                                                <Input {...field} placeholder="enter price"/>
+                                                            </FormControl>
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </React.Fragment>
+                                        ))}
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => appendMealPlan({mealPlanName: "", price: ""})}
+                                        className="mt-7 disabled:opacity-50 disabled:cursor-not-allowed w-full cursor-pointer"
+                                    >
+                                        <div
+                                            className="border gap-3 border-dashed border-dms-50 py-2 flex flex-col items-center justify-center">
+                                            <IconPlus className="text-dms-50"/>
+                                            <p className="text-sm text-dms-50">Add another Meal Plan</p>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
 
                     </form>
                 </Form>

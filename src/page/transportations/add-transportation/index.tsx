@@ -33,6 +33,8 @@ const formSchema = z.object({
             price: z.string(),
         })
     ),
+    phoneNumber: z.string(),
+    timeList: z.string()
 });
 
 const CreateTransportation = () => {
@@ -41,6 +43,8 @@ const CreateTransportation = () => {
         defaultValues: {
             name: "",
             description: "",
+            phoneNumber: "",
+            timeList: "",
             priceList: [
                 {
                     placeId: "",
@@ -111,6 +115,36 @@ const CreateTransportation = () => {
                                         </FormLabel>
                                         <FormControl>
                                             <Input {...field} placeholder="enter description" />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="phoneNumber"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className=" text-sm flex items-center">
+                                            <span className=" text-red-500">*</span>
+                                            <p>Phone Number</p>
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder="enter phone number" />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="timeList"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className=" text-sm flex items-center">
+                                            <span className=" text-red-500">*</span>
+                                            <p>Time List</p>
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder="enter time" />
                                         </FormControl>
                                     </FormItem>
                                 )}

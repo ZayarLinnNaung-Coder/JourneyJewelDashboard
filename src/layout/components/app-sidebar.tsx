@@ -36,7 +36,7 @@ const AppSideBar = () => {
     <Sidebar className="">
       <SidebarHeader className=" pl-4 text-dms-50 flex items-center gap-2 flex-row font-[500] text-lg">
         <img src={logo} className=" w-[40px]  " alt="" />
-        LM Delivery
+        Journey Jewel
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

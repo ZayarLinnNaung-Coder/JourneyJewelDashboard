@@ -28,6 +28,8 @@ import {useGetTransportationById} from "@/store/server/transportations/query.tsx
 const formSchema = z.object({
     name: z.string(),
     description: z.string(),
+    phoneNumber: z.string(),
+    timeList: z.string(),
     priceList: z.array(
         z.object({
             placeId: z.string(),
@@ -42,6 +44,8 @@ const EditTransportation = () => {
         defaultValues: {
             name: "",
             description: "",
+            phoneNumber: "",
+            timeList: "",
             priceList: [],
         },
     });
@@ -66,6 +70,8 @@ const EditTransportation = () => {
             form.setValue("name", transportationById.name);
             form.setValue("description", transportationById?.description);
             form.setValue("priceList", transportationById?.priceList);
+            form.setValue("timeList", transportationById?.timeList);
+            form.setValue("phoneNumber", transportationById?.phoneNumber);
         }
     }, [transportationById]);
 
@@ -120,6 +126,37 @@ const EditTransportation = () => {
                                         </FormLabel>
                                         <FormControl>
                                             <Input {...field} placeholder="enter description" />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="phoneNumber"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className=" text-sm flex items-center">
+                                            <span className=" text-red-500">*</span>
+                                            <p>Phone Number</p>
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder="enter phone number" />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="timeList"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className=" text-sm flex items-center">
+                                            <span className=" text-red-500">*</span>
+                                            <p>Time List</p>
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder="enter time" />
                                         </FormControl>
                                     </FormItem>
                                 )}

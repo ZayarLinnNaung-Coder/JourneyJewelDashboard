@@ -43,6 +43,8 @@ export interface PlaceDetailsProps {
   id: string
   name: string
   description: string
+  timeList: string
+  phoneNumber: string
   priceList: Price[]
 }
 

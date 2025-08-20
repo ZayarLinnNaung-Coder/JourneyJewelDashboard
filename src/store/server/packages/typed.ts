@@ -1,4 +1,4 @@
-export interface placeDataProps {
+export interface transportationDataResponse {
   content: Content[];
   page: Page;
 }
@@ -6,10 +6,13 @@ export interface placeDataProps {
 export interface Content {
   id: string
   name: string
-  place: string
-  minBudget: string
   description: string
-  imageUrl: string
+  priceList: Price[]
+}
+
+export interface Price {
+  placeId: string,
+  price: number | string
 }
 
 export interface Page {
@@ -20,12 +23,12 @@ export interface Page {
 }
 
 export interface PlaceCreateProps {
+  id: string
   name: string
   place: string
   minBudget: string
   description: string
   imageUrl: string
-  placeType: string
 }
 
 export interface PlaceUpdateProps {
@@ -34,21 +37,31 @@ export interface PlaceUpdateProps {
   minBudget: string
   description: string
   imageUrl: string
-  placeType: string
 }
 
-export interface PlaceDetailsProps {
+export interface PackagesDetailsProps {
   id: string
   name: string
-  place: string
-  minBudget: string
   description: string
+  placeId: string
+  phoneNumber: string
   imageUrl: string
-  placeType: string
+  roomTypes: RoomType[]
+  mealPlans: MealPlan[]
 }
 
 export interface getPayload {
   page?: number;
   size?: number;
   query?: string;
+}
+
+export interface RoomType {
+  roomTypeName: string,
+  price: number | string
+}
+
+export interface MealPlan {
+  mealPlanName: string,
+  price: number | string
 }
