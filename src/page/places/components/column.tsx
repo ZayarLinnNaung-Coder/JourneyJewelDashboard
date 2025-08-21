@@ -35,7 +35,11 @@ export const columns: ColumnDef<Content>[] = [
     header: () => <p className="  w-[140px] ">Place</p>,
     cell: ({ row }) => {
       return (
-        <p className=" w-[140px] ">{row.getValue("place") || "-"}</p>
+        <p className=" w-[140px] ">
+          {String(row.getValue("place")).length > 20
+              ? String(row.getValue("place")).substring(0, 20) + "..."
+              : row.getValue("place")}
+        </p>
       );
     },
   },

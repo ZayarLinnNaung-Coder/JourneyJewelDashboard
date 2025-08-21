@@ -21,6 +21,9 @@ import {SelectValue} from "@radix-ui/react-select";
 import {useGetHotels} from "@/store/server/hotels/query.tsx";
 import {useGetTransportations} from "@/store/server/transportations/query.tsx";
 import {useCreatepackages} from "@/store/server/packages/mutation.tsx";
+import {useMerchant} from "@/store/server/merchants/mutation.tsx";
+import merchants from "@/page/merchants";
+import {useMerchants} from "@/store/server/merchants/query.tsx";
 
 const formSchema = z.object({
     name: z.string(),
@@ -28,6 +31,7 @@ const formSchema = z.object({
     price: z.string(),
     placeId: z.string(),
     hotelId: z.string(),
+    merchantId: z.string(),
     transportationId: z.string(),
     selectedRoomType: z.string(),
     selectedMealPlan: z.string(),
@@ -44,6 +48,7 @@ const AddPackage = () => {
             description: "",
             price: "",
             placeId: "",
+            merchantId: "",
             transportationId: "",
             hotelId: "",
             selectedRoomType: "",
@@ -74,6 +79,11 @@ const AddPackage = () => {
     });
 
     const { data: transportation } = useGetTransportations({
+        page: 0,
+        size: 99999999
+    });
+
+    const { data: merchant } = useMerchants({
         page: 0,
         size: 99999999
     });
@@ -318,6 +328,37 @@ const AddPackage = () => {
                                                 {transportation?.content.map((transportation) => (
                                                     <SelectItem value={transportation.id}>
                                                         {transportation.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name={`merchantId`}
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            <span className=" text-red-500">*</span> Merchant
+                                        </FormLabel>
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={field.onChange}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className=" w-full">
+                                                    <SelectValue
+                                                        className=" w-full col-span-1"
+                                                        placeholder="Select Merchant"
+                                                    />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {merchant?.data?.content.map((m) => (
+                                                    <SelectItem value={m.id}>
+                                                        {m.name}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
