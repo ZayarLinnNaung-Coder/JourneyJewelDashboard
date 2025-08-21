@@ -25,6 +25,7 @@ export interface PlaceCreateProps {
   minBudget: string
   description: string
   imageUrl: string
+  additionalImages: {  url: string }[]
   placeType: string
 }
 

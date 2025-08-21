@@ -1,5 +1,5 @@
 import IconLeft from "@/common/icon/IconLeft";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { Link } from "react-router";
 import { z } from "zod";
 import { formSchemaSchema } from "./schema";
@@ -22,7 +22,8 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useCreateWay } from "@/store/server/places/mutation";
-import {Textarea} from "@/components/ui/textarea.tsx";
+import { Textarea } from "@/components/ui/textarea.tsx";
+import { Plus, X } from "lucide-react"; // Make sure you have lucide-react installed
 
 // Define the enum options
 const PLACE_TYPES = [
@@ -45,11 +46,26 @@ const CreatePlace = () => {
             minBudget: '0',
             description: '',
             imageUrl: '',
-            placeType: '' // Add this to your schema
+            additionalImages: [], // Add this for additional images
+            placeType: ''
         },
     });
 
+    // Use field array for dynamic additional images
+    const { fields, append, remove } = useFieldArray({
+        control: form.control,
+        name: "additionalImages"
+    });
+
     const way = useCreateWay();
+
+    const handleAddImage = () => {
+        append({ url: "" });
+    };
+
+    const handleRemoveImage = (index: number) => {
+        remove(index);
+    };
 
     return (
         <div className=" px-5 pt-5">
@@ -74,7 +90,8 @@ const CreatePlace = () => {
                                 minBudget: val.minBudget,
                                 description: val.description,
                                 imageUrl: val.imageUrl,
-                                placeType: val.placeType // Include this in the mutation
+                                additionalImages: val.additionalImages, // Include additional images
+                                placeType: val.placeType
                             })
                         )}
                         className=" space-y-8"
@@ -91,15 +108,67 @@ const CreatePlace = () => {
                                     render={({field}) => (
                                         <FormItem>
                                             <FormLabel className=" font-[400] gap-1 items-center flex">
-                                                <span className="text-red-500">*</span>Image
+                                                <span className="text-red-500">*</span>Main Image
                                             </FormLabel>
                                             <FormControl>
-                                                <Input {...field} placeholder="enter image url"/>
+                                                <Input {...field} placeholder="enter main image url"/>
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
                                     )}
                                 />
+                            </div>
+
+                            {/* Additional Images Section */}
+                            <div className="px-5 pt-6">
+                                <div className="flex items-center justify-between mb-4">
+                                    <FormLabel className="font-[400] text-sm">
+                                        Additional Images
+                                    </FormLabel>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleAddImage}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                        Add Image
+                                    </Button>
+                                </div>
+
+                                {fields.length > 0 && (
+                                    <div className="space-y-3">
+                                        {fields.map((field, index) => (
+                                            <div key={field.id} className="flex items-end gap-2">
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`additionalImages.${index}.url`}
+                                                    render={({ field }) => (
+                                                        <FormItem className="flex-1">
+                                                            <FormControl>
+                                                                <Input
+                                                                    {...field}
+                                                                    placeholder={`Additional image ${index + 1} url`}
+                                                                />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => handleRemoveImage(index)}
+                                                    className="flex items-center gap-1 text-red-500 hover:text-red-700"
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             <div className=" px-5 py-8 grid grid-cols-4 gap-4">

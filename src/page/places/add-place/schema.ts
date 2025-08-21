@@ -1,4 +1,4 @@
-import { z } from "zod";
+import {z} from "zod";
 
 export const formSchemaSchema = z.object({
   name: z.string(),
@@ -6,5 +6,8 @@ export const formSchemaSchema = z.object({
   minBudget: z.string(),
   description: z.string(),
   imageUrl: z.string(),
+  additionalImages: z.array(z.object({
+    url: z.string().url("Please enter a valid URL")
+  })).default([]),
   placeType: z.string()
 });
