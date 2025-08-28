@@ -69,29 +69,58 @@ const EditHotel = () => {
         name: "mealPlans",
     });
 
-    const { data: place } = useGetPlaces({
+    const { data: place, isLoading: placesLoading } = useGetPlaces({
         page: 0,
         size: 99999999
     });
 
     const param = useParams();
-    const { data: hotelById } = useGetHotelById(param?.id?.toString() || "");
+    const { data: hotelById, isLoading: hotelLoading } = useGetHotelById(param?.id?.toString() || "");
 
+    // Updated useEffect to handle both data loading states
     useEffect(() => {
-        if (hotelById) {
-            form.setValue("name", hotelById.name);
-            form.setValue("description", hotelById?.description);
-            form.setValue("placeId", hotelById?.placeId);
-            form.setValue("roomTypes", hotelById?.roomTypes);
-            form.setValue("mealPlans", hotelById?.mealPlans);
-            form.setValue("phoneNumber", hotelById?.phoneNumber);
-            form.setValue("imageUrl", hotelById?.imageUrl);
+        if (hotelById && !hotelLoading) {
+            // Use form.reset instead of individual setValue calls
+            form.reset({
+                name: hotelById.name || "",
+                description: hotelById.description || "",
+                placeId: hotelById.placeId || "",
+                phoneNumber: hotelById.phoneNumber || "",
+                imageUrl: hotelById.imageUrl || "",
+                roomTypes: hotelById.roomTypes || [],
+                mealPlans: hotelById.mealPlans || [],
+            });
 
-            console.log(form.getValues())
+            console.log("Form values set:", form.getValues());
         }
-    }, [hotelById]);
+    }, [hotelById, hotelLoading, form]);
+
+    // Additional useEffect to ensure placeId is set correctly when places data loads
+    useEffect(() => {
+        if (hotelById && place && !placesLoading && hotelById.placeId) {
+            // Verify that the placeId exists in the places data
+            const placeExists = place.content.some(p => p.id === hotelById.placeId);
+            if (placeExists) {
+                form.setValue("placeId", hotelById.placeId);
+            }
+        }
+    }, [hotelById, place, placesLoading, form]);
 
     const updateHotel = useUpdateHotel(param?.id?.toString() || '');
+
+    // Show loading state while data is being fetched
+    if (hotelLoading || placesLoading) {
+        return (
+            <div className="px-5 pt-5">
+                <div className="flex items-center gap-3">
+                    <Link to={"/hotels"}>
+                        <IconLeft />
+                    </Link>
+                    <p className="text-lg font-[500]">Loading...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className=" px-5 pt-5">
@@ -184,7 +213,7 @@ const EditHotel = () => {
 
                             <FormField
                                 control={form.control}
-                                name={`placeId`}
+                                name="placeId"
                                 render={({field}) => (
                                     <FormItem>
                                         <FormLabel>
@@ -215,111 +244,111 @@ const EditHotel = () => {
                             />
                         </div>
 
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <div className="card p-5 bg-[#fafafa] rounded-md">
-                                    <p className="mb-5">Room Types</p>
-                                    <div className="gap-4 grid grid-cols-2 items-end">
-                                        {roomTypeFields.map((_, idx) => (
-                                            <React.Fragment key={idx}>
-                                                <FormField
-                                                    name={`roomTypes.${idx}.roomTypeName`}
-                                                    control={form.control}
-                                                    render={({field}) => (
-                                                        <FormItem>
-                                                            <FormLabel className="text-sm flex items-center">
-                                                                <span className="text-red-500">*</span>
-                                                                <p>Room Name</p>
-                                                            </FormLabel>
-                                                            <FormControl>
-                                                                <Input {...field} placeholder="enter room name"/>
-                                                            </FormControl>
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                                <FormField
-                                                    name={`roomTypes.${idx}.price`}
-                                                    control={form.control}
-                                                    render={({field}) => (
-                                                        <FormItem>
-                                                            <FormLabel className="text-sm flex items-center">
-                                                                <span className="text-red-500">*</span>
-                                                                <p>Price</p>
-                                                            </FormLabel>
-                                                            <FormControl>
-                                                                <Input {...field} placeholder="enter price"/>
-                                                            </FormControl>
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                            </React.Fragment>
-                                        ))}
-                                    </div>
-
-                                    <button
-                                        type="button"
-                                        onClick={() => appendRoomType({roomTypeName: "", price: ""})}
-                                        className="mt-7 disabled:opacity-50 disabled:cursor-not-allowed w-full cursor-pointer"
-                                    >
-                                        <div
-                                            className="border gap-3 border-dashed border-dms-50 py-2 flex flex-col items-center justify-center">
-                                            <IconPlus className="text-dms-50"/>
-                                            <p className="text-sm text-dms-50">Add another Room Type</p>
-                                        </div>
-                                    </button>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="card p-5 bg-[#fafafa] rounded-md">
+                                <p className="mb-5">Room Types</p>
+                                <div className="gap-4 grid grid-cols-2 items-end">
+                                    {roomTypeFields.map((_, idx) => (
+                                        <React.Fragment key={idx}>
+                                            <FormField
+                                                name={`roomTypes.${idx}.roomTypeName`}
+                                                control={form.control}
+                                                render={({field}) => (
+                                                    <FormItem>
+                                                        <FormLabel className="text-sm flex items-center">
+                                                            <span className="text-red-500">*</span>
+                                                            <p>Room Name</p>
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Input {...field} placeholder="enter room name"/>
+                                                        </FormControl>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                name={`roomTypes.${idx}.price`}
+                                                control={form.control}
+                                                render={({field}) => (
+                                                    <FormItem>
+                                                        <FormLabel className="text-sm flex items-center">
+                                                            <span className="text-red-500">*</span>
+                                                            <p>Price</p>
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Input {...field} placeholder="enter price"/>
+                                                        </FormControl>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        </React.Fragment>
+                                    ))}
                                 </div>
 
-                                <div className="card p-5 bg-[#fafafa] rounded-md">
-                                    <p className="mb-5">Meal Plans</p>
-                                    <div className="gap-4 grid grid-cols-2 items-end">
-                                        {mealPlanFields.map((_, idx) => (
-                                            <React.Fragment key={idx}>
-                                                <FormField
-                                                    name={`mealPlans.${idx}.mealPlanName`}
-                                                    control={form.control}
-                                                    render={({field}) => (
-                                                        <FormItem>
-                                                            <FormLabel className="text-sm flex items-center">
-                                                                <span className="text-red-500">*</span>
-                                                                <p>Meal Plan Name</p>
-                                                            </FormLabel>
-                                                            <FormControl>
-                                                                <Input {...field} placeholder="enter meal plan name"/>
-                                                            </FormControl>
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                                <FormField
-                                                    name={`mealPlans.${idx}.price`}
-                                                    control={form.control}
-                                                    render={({field}) => (
-                                                        <FormItem>
-                                                            <FormLabel className="text-sm flex items-center">
-                                                                <span className="text-red-500">*</span>
-                                                                <p>Price</p>
-                                                            </FormLabel>
-                                                            <FormControl>
-                                                                <Input {...field} placeholder="enter price"/>
-                                                            </FormControl>
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                            </React.Fragment>
-                                        ))}
+                                <button
+                                    type="button"
+                                    onClick={() => appendRoomType({roomTypeName: "", price: ""})}
+                                    className="mt-7 disabled:opacity-50 disabled:cursor-not-allowed w-full cursor-pointer"
+                                >
+                                    <div
+                                        className="border gap-3 border-dashed border-dms-50 py-2 flex flex-col items-center justify-center">
+                                        <IconPlus className="text-dms-50"/>
+                                        <p className="text-sm text-dms-50">Add another Room Type</p>
                                     </div>
-
-                                    <button
-                                        type="button"
-                                        onClick={() => appendMealPlan({mealPlanName: "", price: ""})}
-                                        className="mt-7 disabled:opacity-50 disabled:cursor-not-allowed w-full cursor-pointer"
-                                    >
-                                        <div
-                                            className="border gap-3 border-dashed border-dms-50 py-2 flex flex-col items-center justify-center">
-                                            <IconPlus className="text-dms-50"/>
-                                            <p className="text-sm text-dms-50">Add another Meal Plan</p>
-                                        </div>
-                                    </button>
-                                </div>
+                                </button>
                             </div>
+
+                            <div className="card p-5 bg-[#fafafa] rounded-md">
+                                <p className="mb-5">Meal Plans</p>
+                                <div className="gap-4 grid grid-cols-2 items-end">
+                                    {mealPlanFields.map((_, idx) => (
+                                        <React.Fragment key={idx}>
+                                            <FormField
+                                                name={`mealPlans.${idx}.mealPlanName`}
+                                                control={form.control}
+                                                render={({field}) => (
+                                                    <FormItem>
+                                                        <FormLabel className="text-sm flex items-center">
+                                                            <span className="text-red-500">*</span>
+                                                            <p>Meal Plan Name</p>
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Input {...field} placeholder="enter meal plan name"/>
+                                                        </FormControl>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                name={`mealPlans.${idx}.price`}
+                                                control={form.control}
+                                                render={({field}) => (
+                                                    <FormItem>
+                                                        <FormLabel className="text-sm flex items-center">
+                                                            <span className="text-red-500">*</span>
+                                                            <p>Price</p>
+                                                        </FormLabel>
+                                                        <FormControl>
+                                                            <Input {...field} placeholder="enter price"/>
+                                                        </FormControl>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        </React.Fragment>
+                                    ))}
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onClick={() => appendMealPlan({mealPlanName: "", price: ""})}
+                                    className="mt-7 disabled:opacity-50 disabled:cursor-not-allowed w-full cursor-pointer"
+                                >
+                                    <div
+                                        className="border gap-3 border-dashed border-dms-50 py-2 flex flex-col items-center justify-center">
+                                        <IconPlus className="text-dms-50"/>
+                                        <p className="text-sm text-dms-50">Add another Meal Plan</p>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
                     </form>
                 </Form>
             </div>
@@ -336,7 +365,7 @@ const EditHotel = () => {
                 </Button>
             </div>
         </div>
-);
+    );
 };
 
 export default EditHotel;
