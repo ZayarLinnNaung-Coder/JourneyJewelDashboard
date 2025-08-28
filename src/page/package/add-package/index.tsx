@@ -227,7 +227,7 @@ const AddPackage = () => {
                                             <SelectContent>
                                                 {selectedHotelRoomTypes.map((roomType, index) => (
                                                     <SelectItem key={index} value={roomType.roomTypeName}>
-                                                        {roomType.roomTypeName} - ${roomType.price}
+                                                        {roomType.roomTypeName}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -259,7 +259,7 @@ const AddPackage = () => {
                                             <SelectContent>
                                                 {selectedHotelMealPlans.map((mealPlan, index) => (
                                                     <SelectItem key={index} value={mealPlan.mealPlanName}>
-                                                        {mealPlan.mealPlanName} - ${mealPlan.price}
+                                                        {mealPlan.mealPlanName}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>

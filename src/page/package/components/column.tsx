@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { Link } from "react-router";
+import {useDeleteTeam} from "@/store/server/team/mutation.tsx";
 
 export const columns: ColumnDef<Content>[] = [
   {
@@ -41,6 +42,22 @@ export const columns: ColumnDef<Content>[] = [
           <p className=" w-[140px]">
             { row.getValue("price") }
           </p>
+      );
+    },
+  },
+  {
+    accessorKey: "id",
+    header: () => <p className=" w-[20px] flex justify-start">Action</p>,
+    cell: ({ row }) => {
+      const id = row.getValue("id") as string;
+
+      return (
+          <div className=" !w-[100px]  justify-start flex items-center gap-1">
+            <Link className=" pl-3 text-dms-50" to={`/packages/edit/${id}`}>
+              Edit
+            </Link>
+            {" "}
+          </div>
       );
     },
   },

@@ -10,17 +10,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {useEffect, useRef, useState} from "react";
-import { useForm } from "react-hook-form";
+import {useEffect} from "react";
+import {useFieldArray, useForm} from "react-hook-form";
 import { Link, useParams } from "react-router";
 import { z } from "zod";
 import {formSchemaSchema} from "@/page/places/edit-place/schema.ts";
 import {useUpdateWay} from "@/store/server/places/mutation.tsx";
 import {useGetPlaceById} from "@/store/server/places/query.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
-import {axios} from "@/common/util/axiox.ts";
-import {authJsonToken} from "@/common/util/util.ts";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
+import {Plus, X} from "lucide-react";
 
 const EditTeam = () => {
     const param = useParams();
@@ -31,6 +30,7 @@ const EditTeam = () => {
             minBudget: '0',
             description: '',
             imageUrl: '',
+            additionalImages: [], // Add this for additional images
             placeType: ''
         },
         resolver: zodResolver(formSchemaSchema),
@@ -55,14 +55,34 @@ const EditTeam = () => {
 
     useEffect(() => {
         if (placeById) {
-            form.setValue("name", placeById.name);
-            form.setValue("place", placeById?.place);
-            form.setValue("minBudget", placeById.minBudget.toString()   );
-            form.setValue("description", placeById?.description);
-            form.setValue("imageUrl", placeById?.imageUrl);
-            form.setValue("placeType", placeById?.placeType);
+
+            form.reset({
+                name: placeById.name,
+                place: placeById.place,
+                minBudget: placeById.minBudget.toString(),
+                description: placeById.description,
+                imageUrl: placeById.imageUrl,
+                additionalImages: placeById.additionalImages, // Include additional images
+                placeType: placeById.placeType,
+            });
+
+            console.log(form.getValues())
         }
     }, [placeById]);
+
+    const handleAddImage = () => {
+        append({ url: "" });
+    };
+
+    const handleRemoveImage = (index: number) => {
+        remove(index);
+    };
+
+    // Use field array for dynamic additional images
+    const { fields, append, remove } = useFieldArray({
+        control: form.control,
+        name: "additionalImages"
+    });
 
     return (
         <div className=" px-5 pt-5">
@@ -82,7 +102,8 @@ const EditTeam = () => {
                                 minBudget: val.minBudget,
                                 description: val.description,
                                 imageUrl: val.imageUrl,
-                                placeType: val.placeType // Include this in the mutation
+                                additionalImages: val.additionalImages,
+                                placeType: val.placeType
                             })
                         )}
                         className=" space-y-8"
@@ -110,7 +131,59 @@ const EditTeam = () => {
                                 />
                             </div>
 
-                            <div className=" px-5 py-8 grid grid-cols-3 gap-4">
+                            {/* Additional Images Section */}
+                            <div className="px-5 pt-6">
+                                <div className="flex items-center justify-between mb-4">
+                                    <FormLabel className="font-[400] text-sm">
+                                        Additional Images
+                                    </FormLabel>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleAddImage}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                        Add Image
+                                    </Button>
+                                </div>
+
+                                {fields.length > 0 && (
+                                    <div className="space-y-3">
+                                        {fields.map((field, index) => (
+                                            <div key={field.id} className="flex items-end gap-2">
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`additionalImages.${index}.url`}
+                                                    render={({ field }) => (
+                                                        <FormItem className="flex-1">
+                                                            <FormControl>
+                                                                <Input
+                                                                    {...field}
+                                                                    placeholder={`Additional image ${index + 1} url`}
+                                                                />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => handleRemoveImage(index)}
+                                                    className="flex items-center gap-1 text-red-500 hover:text-red-700"
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className=" px-5 py-8 grid grid-cols-4 gap-4">
                                 <FormField
                                     control={form.control}
                                     name="name"
@@ -164,7 +237,7 @@ const EditTeam = () => {
                                             <FormLabel className=" font-[400] gap-1 items-center flex">
                                                 <span className="text-red-500">*</span>Place Type
                                             </FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <Select onValueChange={field.onChange} value={field.value}>
                                                 <FormControl>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Select place type" />

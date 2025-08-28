@@ -56,7 +56,7 @@ const Role = () => {
               <img
                 src={
                   role.imageUrl ||
-                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOn_xsvlyI2SBIBjDMNh5NJgOW0qZQhjwk1g&s"
+                  "https://www.kore1.com/wp-content/uploads/2014/09/Know-Your-Role-and-Stick-to-it.jpg"
                 }
                 alt="img"
                 className=" w-full h-[170px] object-cover"

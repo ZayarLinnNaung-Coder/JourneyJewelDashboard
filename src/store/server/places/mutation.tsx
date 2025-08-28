@@ -18,15 +18,21 @@ export const useCreateWay = () => {
   return useMutation({
     mutationFn: (payload: PlaceCreateProps) => createWay(payload),
     onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ["get-places"] });
+      // Invalidate all place-related queries
+      queryClient.invalidateQueries({ queryKey: ["get-places"] });
+      queryClient.invalidateQueries({ queryKey: ["get-place-by-id"] });
       navigate("/places");
       toast.success("Add place successfully");
+    },
+    onError: (error) => {
+      console.error("Create place error:", error);
+      toast.error("Failed to add place");
     },
   });
 };
 
 const updateWay = async (payload: PlaceUpdateProps, id: string) => {
-  console.log("On updating...")
+  console.log("On updating...", payload);
   const { data } = await axios.put(`places/${id}`, payload, {
     headers: authJsonToken(),
   });
@@ -38,10 +44,22 @@ export const useUpdateWay = (id: string) => {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: (payload: PlaceUpdateProps) => updateWay(payload, id),
-    onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ["get-places"] });
+    onSuccess: (data) => {
+      console.log("Update successful:", data);
+
+      // Invalidate all related queries
+      queryClient.invalidateQueries({ queryKey: ["get-places"] });
+      queryClient.invalidateQueries({ queryKey: ["get-place-by-id", id] });
+
+      // Optionally update the cache directly for immediate UI update
+      queryClient.setQueryData(["get-place-by-id", id], data);
+
       navigate("/places");
       toast.success("Edit place successfully");
+    },
+    onError: (error) => {
+      console.error("Update place error:", error);
+      toast.error("Failed to update place");
     },
   });
 };

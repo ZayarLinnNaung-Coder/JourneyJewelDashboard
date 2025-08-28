@@ -60,14 +60,6 @@ const Team = () => {
 
         <div className=" flex items-center gap-4">
           <Button
-            onClick={() => navigate("/role")}
-            className="  font-[400] cursor-pointer "
-            size={"lg"}
-            variant={"outline"}
-          >
-            <IconSettings /> Role Settings
-          </Button>
-          <Button
             className="  font-[400] cursor-pointer bg-dms-50 hover:bg-dms-50"
             size={"lg"}
             onClick={() => navigate("/team/add-team")}

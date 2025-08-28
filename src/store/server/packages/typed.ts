@@ -40,14 +40,15 @@ export interface PlaceUpdateProps {
 }
 
 export interface PackagesDetailsProps {
-  id: string
-  name: string
-  description: string
-  placeId: string
-  phoneNumber: string
-  imageUrl: string
-  roomTypes: RoomType[]
-  mealPlans: MealPlan[]
+  name: string;
+  description: string;
+  price: string;
+  placeId: string;
+  merchantId: string;
+  transportationId: string;
+  hotelId: string;
+  selectedRoomType: string;
+  selectedMealPlan: string;
 }
 
 export interface getPayload {

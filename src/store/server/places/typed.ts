@@ -1,3 +1,5 @@
+import {z} from "zod";
+
 export interface placeDataProps {
   content: Content[];
   page: Page;
@@ -10,6 +12,8 @@ export interface Content {
   minBudget: string
   description: string
   imageUrl: string
+  additionalImages: {  url: string }[]
+  placeType: string
 }
 
 export interface Page {
@@ -36,6 +40,7 @@ export interface PlaceUpdateProps {
   description: string
   imageUrl: string
   placeType: string
+  additionalImages: {  url: string }[]
 }
 
 export interface PlaceDetailsProps {
@@ -46,6 +51,7 @@ export interface PlaceDetailsProps {
   description: string
   imageUrl: string
   placeType: string
+  additionalImages: {  url: string }[]
 }
 
 export interface getPayload {

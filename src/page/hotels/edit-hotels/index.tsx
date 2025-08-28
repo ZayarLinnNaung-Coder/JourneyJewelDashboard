@@ -22,8 +22,6 @@ import { useFieldArray, useForm } from "react-hook-form";
 import {Link, useParams} from "react-router";
 import {z} from "zod";
 import {useGetPlaces} from "@/store/server/places/query.tsx";
-import {useUpdateTransportation} from "@/store/server/transportations/mutation.tsx";
-import {useGetTransportationById} from "@/store/server/transportations/query.tsx";
 import {useGetHotelById} from "@/store/server/hotels/query.tsx";
 import {useUpdateHotel} from "@/store/server/hotels/mutation.tsx";
 
@@ -206,7 +204,7 @@ const EditHotel = () => {
                                             </FormControl>
                                             <SelectContent>
                                                 {place?.content.map((place) => (
-                                                    <SelectItem value={place.id}>
+                                                    <SelectItem key={place.id} value={place.id}>
                                                         {place.name}
                                                     </SelectItem>
                                                 ))}

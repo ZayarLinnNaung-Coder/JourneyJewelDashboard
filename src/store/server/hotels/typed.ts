@@ -25,18 +25,22 @@ export interface Page {
 export interface PlaceCreateProps {
   id: string
   name: string
-  place: string
-  minBudget: string
   description: string
+  placeId: string
+  phoneNumber: string
   imageUrl: string
+  roomTypes: RoomType[]
+  mealPlans: MealPlan[]
 }
 
 export interface PlaceUpdateProps {
   name: string
-  place: string
-  minBudget: string
   description: string
+  placeId: string
+  phoneNumber: string
   imageUrl: string
+  roomTypes: RoomType[]
+  mealPlans: MealPlan[]
 }
 
 export interface HotelDetailsProps {
