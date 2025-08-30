@@ -22,7 +22,32 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (payload: LoginProp) => login(payload),
     onSuccess: (data) => {
-      navigate("/");
+      console.log(data.data.role.name)
+      localStorage.setItem('role', data.data.role.name)
+
+      const userRole = data.data.role.name;
+      switch (userRole) {
+        case "SUPER_ADMIN":
+          navigate("/");
+          break;
+        case "OPERATION_MANAGER":
+          navigate("/places");
+          break;
+        case "TRANSPORTATION_MANAGER":
+          navigate("/transportations");
+          break;
+        case "HOTEL_MANAGER":
+          navigate("/hotels");
+          break;
+        case "TOUR_MANAGER":
+          navigate("/packages");
+          break;
+        default:
+          // Fallback to home page if role is not recognized
+          navigate("/");
+          break;
+      }
+
       setAuth(data.data.token);
     },
     onError: (err: AxiosError) => {

@@ -37,6 +37,12 @@ const PLACE_TYPES = [
     { value: "VALLEY", label: "Valley" },
 ];
 
+// Define availability options
+const AVAILABILITY_OPTIONS = [
+    { value: "true", label: "Available" },
+    { value: "false", label: "Unavailable" },
+];
+
 const CreatePlace = () => {
     const form = useForm<z.infer<typeof formSchemaSchema>>({
         resolver: zodResolver(formSchemaSchema),
@@ -47,7 +53,8 @@ const CreatePlace = () => {
             description: '',
             imageUrl: '',
             additionalImages: [], // Add this for additional images
-            placeType: ''
+            placeType: '',
+            isAvailable: 'true' // Default to available
         },
     });
 
@@ -91,7 +98,8 @@ const CreatePlace = () => {
                                 description: val.description,
                                 imageUrl: val.imageUrl,
                                 additionalImages: val.additionalImages, // Include additional images
-                                placeType: val.placeType
+                                placeType: val.placeType,
+                                isAvailable: val.isAvailable // Convert string to boolean
                             })
                         )}
                         className=" space-y-8"
@@ -235,6 +243,36 @@ const CreatePlace = () => {
                                                     {PLACE_TYPES.map((type) => (
                                                         <SelectItem key={type.value} value={type.value}>
                                                             {type.label}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage/>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            {/* Availability Field - Added as a new row */}
+                            <div className=" px-5 pb-4 grid grid-cols-4 gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="isAvailable"
+                                    render={({field}) => (
+                                        <FormItem>
+                                            <FormLabel className=" font-[400] gap-1 items-center flex">
+                                                <span className="text-red-500">*</span>Availability
+                                            </FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select availability" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {AVAILABILITY_OPTIONS.map((option) => (
+                                                        <SelectItem key={option.value} value={option.value}>
+                                                            {option.label}
                                                         </SelectItem>
                                                     ))}
                                                 </SelectContent>

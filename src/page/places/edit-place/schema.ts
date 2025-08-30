@@ -10,4 +10,5 @@ export const formSchemaSchema = z.object({
   additionalImages: z.array(z.object({
     url: z.string().url("Please enter a valid URL")
   })).default([]),
+  isAvailable: z.string()
 });

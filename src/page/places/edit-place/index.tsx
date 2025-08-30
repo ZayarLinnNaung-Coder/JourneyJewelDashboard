@@ -31,7 +31,8 @@ const EditTeam = () => {
             description: '',
             imageUrl: '',
             additionalImages: [], // Add this for additional images
-            placeType: ''
+            placeType: '',
+            isAvailable: 'true' // Add availability default value
         },
         resolver: zodResolver(formSchemaSchema),
     });
@@ -50,6 +51,12 @@ const EditTeam = () => {
         { value: "VALLEY", label: "Valley" },
     ];
 
+    // Define availability options
+    const AVAILABILITY_OPTIONS = [
+        { value: "true", label: "Available" },
+        { value: "false", label: "Unavailable" },
+    ];
+
     // mutation
     const updatePlace = useUpdateWay(param?.id?.toString() || "");
 
@@ -64,6 +71,7 @@ const EditTeam = () => {
                 imageUrl: placeById.imageUrl,
                 additionalImages: placeById.additionalImages, // Include additional images
                 placeType: placeById.placeType,
+                isAvailable: placeById.isAvailable === 'true' ? 'true' : 'false' // Convert boolean to string
             });
 
             console.log(form.getValues())
@@ -103,7 +111,8 @@ const EditTeam = () => {
                                 description: val.description,
                                 imageUrl: val.imageUrl,
                                 additionalImages: val.additionalImages,
-                                placeType: val.placeType
+                                placeType: val.placeType,
+                                isAvailable: val.isAvailable === 'true'? 'true': 'false' // Convert string to boolean
                             })
                         )}
                         className=" space-y-8"
@@ -247,6 +256,36 @@ const EditTeam = () => {
                                                     {PLACE_TYPES.map((type) => (
                                                         <SelectItem key={type.value} value={type.value}>
                                                             {type.label}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage/>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            {/* Availability Field - Added as a new row */}
+                            <div className=" px-5 pb-4 grid grid-cols-4 gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="isAvailable"
+                                    render={({field}) => (
+                                        <FormItem>
+                                            <FormLabel className=" font-[400] gap-1 items-center flex">
+                                                <span className="text-red-500">*</span>Availability
+                                            </FormLabel>
+                                            <Select onValueChange={field.onChange} value={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select availability" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {AVAILABILITY_OPTIONS.map((option) => (
+                                                        <SelectItem key={option.value} value={option.value}>
+                                                            {option.label}
                                                         </SelectItem>
                                                     ))}
                                                 </SelectContent>
